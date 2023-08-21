@@ -34,8 +34,5 @@ end
 init()
 
 function pd.update()
-	bally:move()
-	paddly:move()
-
 	gfx.sprite.update()
 end
