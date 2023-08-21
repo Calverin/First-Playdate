@@ -2,6 +2,7 @@ import "CoreLibs/graphics"
 import "CoreLibs/object"
 
 local gfx <const> = playdate.graphics
+local testSound = playdate.sound.sampleplayer.new("sounds/Wilhelm_Scream.wav")
 
 class("dvd").extends()
 
@@ -17,13 +18,13 @@ function dvd:init(xspeed, yspeed)
 end
 
 function dvd:swapColors()
-	if (gfx.getBackgroundColor() == gfx.kColorWhite) then
-		gfx.setBackgroundColor(gfx.kColorBlack)
-		gfx.setImageDrawMode("inverted")
-	else
-		gfx.setBackgroundColor(gfx.kColorWhite)
-		gfx.setImageDrawMode("copy")
-	end
+	--if (gfx.getBackgroundColor() == gfx.kColorWhite) then
+	--	gfx.setBackgroundColor(gfx.kColorBlack)
+	--	gfx.setImageDrawMode("inverted")
+	--else
+	--	gfx.setBackgroundColor(gfx.kColorWhite)
+	--	gfx.setImageDrawMode("copy")
+	--end
 end
 
 function dvd:update()
@@ -40,7 +41,8 @@ function dvd:update()
 	end
 
 	if (swap) then
-		self:swapColors()
+		--self:swapColors()
+		testSound:play()
 	end
 
 	label.x += label.xspeed
