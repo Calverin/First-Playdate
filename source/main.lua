@@ -1,41 +1,41 @@
-import "dvd" -- DEMO
---local dvd = dvd(1, -1) -- DEMO
---for i = 1, 10 do -- DEMO
---	dvd[i] = dvd(math.random() * 2 - 1, math.random() * 2 - 1) -- DEMO
---end -- DEMO
-local dvds = {dvd(1, 1)} -- DEMO
+-- Imports
+import "CoreLibs/graphics"
+import "CoreLibs/sprites"
 
-local gfx <const> = playdate.graphics
-local font = gfx.font.new('font/Mini Sans 2X') -- DEMO
+import "ball"
+import "paddle"
 
-local function loadGame()
-	playdate.display.setRefreshRate(50) -- Sets framerate to 50 fps
-	math.randomseed(playdate.getSecondsSinceEpoch()) -- seed for math.random
-	gfx.setFont(font) -- DEMO
+-- Constants
+local pd <const> = playdate
+local gfx <const> = pd.graphics
+
+local bally, paddly
+
+local function init()
+	-- Ball
+	bally = Ball(200, 120, 2, 2)
+	bally:add()
+	-- Paddle
+	paddly = Paddle(32, 120)
+	paddly:add()
+
+	-- Background
+	local backgroundImage = gfx.image.new("images/Background")
+    assert(backgroundImage)
+    gfx.sprite.setBackgroundDrawingCallback(
+        function(x, y, width, height)
+            -- x,y,width,height is the updated area in sprite-local coordinates
+            -- The clip rect is already set to this area, so we don't need to set it ourselves
+            backgroundImage:draw(0, 0)
+        end
+    )
 end
 
-local function updateGame()
-	if playdate.buttonIsPressed(playdate.kButtonA) then
-		dvds[#dvds + 1] = dvd(math.random() * 2 - 1, math.random() * 2 - 1)
-	end
-	--dvd:update() -- DEMO
-	for i = 1, #dvds do -- DEMO
-		dvds[i]:update() -- DEMO
-	end -- DEMO
-end
+init()
 
-local function drawGame()
-	gfx.clear() -- Clears the screen
-	--dvd:draw() -- DEMO
-	for i = 1, #dvds do -- DEMO
-		dvds[i]:draw() -- DEMO
-	end -- DEMO
-end
+function pd.update()
+	bally:move()
+	paddly:move()
 
-loadGame()
-
-function playdate.update()
-	updateGame()
-	drawGame()
-	playdate.drawFPS(0,0) -- FPS widget
+	gfx.sprite.update()
 end

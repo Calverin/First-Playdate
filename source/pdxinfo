@@ -1,0 +1,8 @@
+name=coolpong
+author=Calverin
+description=Pong but maybe it's cool
+bundleID=com.calverin.coolpong
+version=0.1
+buildNumber=1
+imagePath=SystemAssets
+launchSoundPath=path/to/launch/sound/file
