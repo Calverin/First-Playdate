@@ -7,7 +7,8 @@ local dx = 0
 local dy = 0
 local speed = 0.5
 local maxSpeed = 8
-local rot
+local rot = 0
+local rotSpeed = 5
 
 class("Paddle").extends(gfx.sprite)
 
@@ -21,6 +22,7 @@ function Paddle:init(x, y)
 end
 
 function Paddle:update()
+    -- Moving the paddle
     if (pd.buttonIsPressed(pd.kButtonDown)) then
         dy = math.min(maxSpeed, dy + speed)
 	end
@@ -33,8 +35,16 @@ function Paddle:update()
     if (pd.buttonIsPressed(pd.kButtonRight)) then
         dx = math.min(maxSpeed, dx + speed)
     end
-    rot = pd.getCrankPosition()
-    --self:setRotation(rot)
+
+    -- Rotating the paddle
+    if (pd.isCrankDocked()) then
+        rot += pd.buttonIsPressed(pd.kButtonA) and rotSpeed or pd.buttonIsPressed(pd.kButtonB) and -rotSpeed or 0
+    else
+        rot = pd.getCrankPosition() or 0
+    end
+
+    -- Updating the paddle
+    self:setRotation(rot)
     self:moveWithCollisions(self.x + dx, self.y + dy)
     dx *= 0.9
     dy *= 0.9
