@@ -1,3 +1,4 @@
+--[[ UNUSED
 import "CoreLibs/sprites"
 
 local pd <const> = playdate
@@ -26,6 +27,17 @@ end
 function PaddleSegment:checkLineCollision(other)
     local collisionPolygon = self.paddle:getFullCollisionRect()
     for i = 1, collisionPolygon:count() do
-        print(collisionPolygon:getPointAt(i).x, collisionPolygon:getPointAt(i).y)
+        -- Cycle through each line in the polygon
+		local j = (i + 2) % (collisionPolygon:count()) + 1
+        --gfx.drawLine(collisionPolygon:getPointAt(i).x, collisionPolygon:getPointAt(i).y, collisionPolygon:getPointAt(j).x, collisionPolygon:getPointAt(j).y)
+        -- Get all colliding sprites and check if it is the ball
+        local sprites = gfx.sprite.querySpritesAlongLine(collisionPolygon:getPointAt(i).x, collisionPolygon:getPointAt(i).y, collisionPolygon:getPointAt(j).x, collisionPolygon:getPointAt(j).y)
+        if sprites == nil then return end
+        for k = 1, #sprites do
+            if sprites[k]:isa(Ball) then
+                sprites[k].dx = sprites[k].dx * -1
+                sprites[k].dy = sprites[k].dy * -1
+            end
+        end
     end
-end
+end]]
