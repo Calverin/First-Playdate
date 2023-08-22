@@ -39,7 +39,12 @@ end
 function Ball:collisionResponse(other)
     if other:isa(PaddleSegment) then
         -- Bounce off the paddle_segment
-        
+        --local vx = math.cos(other:getPaddleRot()) * 2
+        --local vy = math.sin(other:getPaddleRot()) * 2
+        --print(vx, vy)
+        --self.dx = vx
+        --self.dy = vy
+        other:checkLineCollision(self)
         return "bounce"
     else
         return "overlap"

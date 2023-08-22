@@ -16,18 +16,18 @@ local segments = {}
 class("Paddle").extends(gfx.sprite)
 
 function Paddle:init(x, y)
-    local img = gfx.image.new("images/PaddleSprite")
+    local img = gfx.image.new("")--gfx.image.new("images/PaddleSprite")
     Paddle.super.init(self)
     self:setImage(img)
     self:moveTo(x, y)
-    self:setCollideRect(0, 0, 64, 64)
+    self:setCollideRect(0, 0, 8, 64)
     Paddle.collisionResponse = "slide"
     self:setGroups(1)
     self:setCollidesWithGroups(1)
     
     -- Creating the segments
     for i = 1, 8 do
-        segments[i] = PaddleSegment(0, 0)
+        segments[i] = PaddleSegment(0, 0, self) -- Passes in the paddle to the segment
         segments[i]:add()
     end
 end
@@ -63,6 +63,20 @@ function Paddle:update()
     -- Updating the segments
     local segmentWidth = 8
     for i = 1, 8 do
-        segments[i]:moveTo(self.x + segmentWidth * (-4.5 + i) * math.cos(math.rad(rot) + math.pi / 2), self.y + segmentWidth * (-4.5 + i) * math.sin(math.rad(rot) + math.pi / 2))
+        segments[i]:moveTo(self.x + segmentWidth * (i - 4.5) * math.cos(math.rad(rot) + math.pi / 2), self.y + segmentWidth * (i - 4.5) * math.sin(math.rad(rot) + math.pi / 2))
     end
+end
+
+function Paddle:getRot()
+    return math.rad(rot) - math.pi / 2
+end
+
+function Paddle:getFullCollisionRect() -- Returns a polygon of the paddle's collision rect rotated to the paddle's rotation
+    local collisionRect = self:getCollideRect()
+    local polygon = collisionRect:toPolygon()
+    local transform = pd.geometry.affineTransform.new()
+    transform:translate(self.x, self.y - 32)
+	transform:rotate(rot, self.x + collisionRect.width / 2, self.y - 32 + collisionRect.height / 2)
+	local rotatedPolygon = transform:transformedPolygon(polygon)
+    return rotatedPolygon
 end

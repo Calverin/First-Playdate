@@ -5,8 +5,10 @@ local gfx <const> = pd.graphics
 
 class("PaddleSegment").extends(gfx.sprite)
 
-function PaddleSegment:init(x, y)
-    local img = gfx.image.new("images/PaddleSegment")
+local paddle = nil
+
+function PaddleSegment:init(x, y, p)
+    local img = gfx.image.new("")
     PaddleSegment.super.init(self)
     self:setImage(img)
     self:moveTo(x, y)
@@ -14,4 +16,16 @@ function PaddleSegment:init(x, y)
     self:setGroups(2)
     self:setCollidesWithGroups(2)
     PaddleSegment.collisionResponse = "slide"
+    self.paddle = p
+end
+
+function PaddleSegment:getPaddleRot()
+    return self.paddle:getRotation()
+end
+
+function PaddleSegment:checkLineCollision(other)
+    local collisionPolygon = self.paddle:getFullCollisionRect()
+    for i = 1, collisionPolygon:count() do
+        print(collisionPolygon:getPointAt(i).x, collisionPolygon:getPointAt(i).y)
+    end
 end
