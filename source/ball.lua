@@ -12,11 +12,13 @@ local speed = 1.000001
 class("Ball").extends(gfx.sprite)
 
 function Ball:init(x, y, dx, dy)
-    local ball = gfx.image.new("images/BallSprite")
+    local img = gfx.image.new("images/BallSprite")
     Ball.super.init(self)
-    self:setImage(ball)
+    self:setImage(img)
     self:moveTo(x, y)
     self:setCollideRect(0, 0, self:getSize())
+    self:setGroups(2)
+    self:setCollidesWithGroups(2)
     self.dx = dx
     self.dy = dy
 end
@@ -35,8 +37,9 @@ function Ball:update()
 end
 
 function Ball:collisionResponse(other)
-    if other:isa(Paddle) then
-        self.dx = -self.dx
+    if other:isa(PaddleSegment) then
+        -- Bounce off the paddle_segment
+        
         return "bounce"
     else
         return "overlap"
