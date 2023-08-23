@@ -7,7 +7,7 @@ local gfx <const> = pd.graphics
 
 local vel
 local speed = 1.000001
-local maxSpeed = 16
+local maxSpeed = 10
 local collisionCooldown = 0
 
 class("Ball").extends(gfx.sprite)
@@ -44,15 +44,9 @@ end
 
 function Ball:collisionResponse(other)
     if other:isa(Paddle) then
-        -- Bounce off the paddle_segment
-        --local vx = math.cos(other:getPaddleRot()) * 2
-        --local vy = math.sin(other:getPaddleRot()) * 2
-        --print(vx, vy)
-        --self.vel.dx = vx
-        --self.vel.dy = vy
         if collisionCooldown <= 0 then
             if other:checkLineCollision(self) then
-                collisionCooldown = 20
+                collisionCooldown = 2
             end
         else
             collisionCooldown -= 1
