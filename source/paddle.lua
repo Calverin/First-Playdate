@@ -94,21 +94,9 @@ function Paddle:checkLineCollision(other)
 end
 
 function Paddle:bounce(other, intersection, x1, y1, x2, y2)
-    local normY = x2 - x1
-    local normX = y1 - y2
-    local normLength = math.sqrt((normX * normX) + (normY * normY))
-    normX /= normLength
-    normY /= normLength
-
-    local bx = other.x + other.dx - intersection.x
-    local by = other.y + other.dy - intersection.y
-    local dot = (bx * normX) + (by * normY)
-
-    local dotNormX = dot * normX
-    local dotNormY = dot * normY
-
-    --other.dx += 2 * dotNormX
-    --other.dy += 2 * dotNormY
-    other.dx = bx + (dotNormX)
-    other.dy = by + (dotNormY)
+    local normal = pd.geometry.vector2D.new(y1 - y2, x2 - x1)
+    normal:normalize()
+    local dot = normal:dotProduct(other.vel)
+    local reflection = pd.geometry.vector2D.new(other.vel.x - 2 * dot * normal.x, other.vel.y - 2 * dot * normal.y)
+    other.vel = reflection
 end
